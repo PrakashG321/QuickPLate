@@ -1,0 +1,1 @@
+I have used mvc architecture and singleton design pattern for database connection.
