@@ -21,7 +21,7 @@ class MenuController
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
             $price = $_POST['price'] ?? '';
-            $image = 'default.png'; 
+            $image = 'default.png';
 
             $errors = [];
 
@@ -41,7 +41,7 @@ class MenuController
                 $upload = new Upload($_FILES['image'], __DIR__ . '/../public/uploads/');
                 $result = $upload->uploadFile();
                 if ($result['status']) {
-                    $image = $result['file_name'];  
+                    $image = $result['file_name'];
                 } else {
                     $errors['image'] = "Error uploading image: " . $result['message'];
                 }
@@ -69,7 +69,7 @@ class MenuController
     {
         try {
             $items = $this->menu->getAllItems();
-            include __DIR__ . '/../views/menu/index.php'; 
+            include __DIR__ . '/../views/menu/index.php';
         } catch (Exception $e) {
             // Handle the error
             echo "Error: " . $e->getMessage();
@@ -80,7 +80,7 @@ class MenuController
     {
         try {
             $item = $this->menu->getItemById($id);
-            include __DIR__ . '/../views/menu/edit.php'; 
+            include __DIR__ . '/../views/menu/edit.php';
         } catch (Exception $e) {
             // Handle the error
             echo "Error: " . $e->getMessage();
@@ -93,17 +93,28 @@ class MenuController
             $name = $_POST['name'];
             $description = $_POST['description'];
             $price = $_POST['price'];
-            $image = $_FILES['image']['name']; 
+            $image = $_FILES['image']['name'];
 
             try {
+                if (!empty($image)) {
+                    // Save uploaded file
+                    $targetDir = __DIR__ . '/../public/uploads/';
+                    $targetFile = $targetDir . basename($image);
+                    move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
+                } else {
+                    // Keep the existing image
+                    $item = $this->menu->getItemById($id);
+                    $image = $item['image'];
+                }
+
                 $this->menu->updateItem($id, $name, $description, $price, $image);
                 header("Location: /menu");
             } catch (Exception $e) {
-                // Handle the error
                 echo "Error: " . $e->getMessage();
             }
         }
     }
+
 
     public function delete($id)
     {

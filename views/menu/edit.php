@@ -28,7 +28,7 @@
                     </div>
                 <?php endif; ?>
 
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" action="/menu/update/<?= $item['id'] ?>" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="name">Item Name</label>
                         <input type="text" name="name" id="name" class="form-control"
